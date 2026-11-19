@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#20201e"/>
+  <rect x="112" y="96" width="288" height="320" rx="8" fill="#f7f5ef"/>
+  <path d="M256 96v320" stroke="#cbc4b4" stroke-width="4"/>
+  <text x="184" y="230" fill="#20201e" font-family="Georgia,serif" font-size="82" text-anchor="middle">F</text>
+  <text x="326" y="230" fill="#20201e" font-family="Georgia,serif" font-size="82" text-anchor="middle">O</text>
+</svg>

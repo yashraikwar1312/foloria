@@ -34,3 +34,21 @@ button { cursor: pointer; }
 .foliora-flipbook {
   box-shadow: 0 25px 70px rgba(40, 38, 32, 0.24);
 }
+
+@media (max-width: 699px) {
+  .foliora-flipbook {
+    max-width: calc(100vw - 32px);
+  }
+  .reader-page {
+    touch-action: pan-y;
+  }
+  .reader-page p {
+    overflow-wrap: anywhere;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .foliora-flipbook {
+    -webkit-tap-highlight-color: transparent;
+  }
+}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { ArrowLeft, ArrowRight, Expand, Moon, Sun, Volume2, VolumeX } from "lucide-react";
+import { ArrowLeft, ArrowRight, Expand, Moon, Share2, Sun, Volume2, VolumeX } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import HTMLFlipBook from "react-pageflip";
 import { useMagazineStore } from "@/lib/store";
@@ -26,6 +26,7 @@ function ReaderContent() {
   const flipBook = useRef<FlipBookRef>(null);
   const [viewport, setViewport] = useState({ width: 390, height: 520 });
   const [isMobile, setIsMobile] = useState(false);
+  const [shareNotice, setShareNotice] = useState("");
   useEffect(() => hydrate(), [hydrate]);
   useEffect(() => {
     const resize = () => {
@@ -54,6 +55,19 @@ function ReaderContent() {
   );
 
   const publicUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareMagazine = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: magazine.title,
+        text: magazine.description || `Read ${magazine.title} on Foliora`,
+        url: publicUrl,
+      }).catch(() => undefined);
+      return;
+    }
+    await navigator.clipboard?.writeText(publicUrl);
+    setShareNotice("Link copied");
+    window.setTimeout(() => setShareNotice(""), 1800);
+  };
   const playPageSound = () => {
     if (!sound) return;
     const context = new AudioContext();
@@ -79,6 +93,7 @@ function ReaderContent() {
           <button onClick={() => setToc(!toc)} className="rounded p-2 text-xs">Contents</button>
           <button onClick={() => setSound(!sound)} className="rounded p-2">{sound ? <Volume2 size={16}/> : <VolumeX size={16}/>}</button>
           <button onClick={() => setDark(!dark)} className="rounded p-2">{dark ? <Sun size={16}/> : <Moon size={16}/>}</button>
+          <button onClick={shareMagazine} className="rounded p-2" title="Share magazine"><Share2 size={16}/></button>
           <button onClick={() => document.documentElement.requestFullscreen?.()} className="hidden rounded p-2 sm:block"><Expand size={16}/></button>
         </div>
       </header>
@@ -147,6 +162,7 @@ function ReaderContent() {
         <span className="w-14 text-center text-xs">{active + 1} / {magazine.pages.length}</span>
         <button onClick={() => flipBook.current?.pageFlip().flipNext()} disabled={active === magazine.pages.length - 1} className="disabled:opacity-30"><ArrowRight size={18}/></button>
       </footer>
+      {shareNotice && <div className="fixed bottom-20 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#20201e] px-4 py-2 text-xs text-white">{shareNotice}</div>}
       <div className="sr-only"><QRCodeSVG value={publicUrl} /></div>
     </main>
   );
