@@ -6,12 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "serve:html": "python -m http.server 4173"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.2",
+    "konva": "^10.9.1",
+    "lucide-react": "^1.76.0",
     "next": "16.4.6",
+    "qrcode.react": "^4.2.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-konva": "^19.3.2",
+    "react-pageflip": "^2.0.3",
+    "zustand": "^5.1.0"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "4.3.3",

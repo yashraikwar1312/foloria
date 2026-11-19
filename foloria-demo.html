@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foliora — Stories deserve beautiful pages</title>
+  <meta name="description" content="Interactive Foliora magazine platform demo">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#20201e; --paper:#f7f5ef; --muted:#77746d; --line:#dedbd2; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter,Arial,sans-serif; }
+    a { color:inherit; text-decoration:none; }
+    button { font:inherit; cursor:pointer; }
+    .serif { font-family:"Cormorant Garamond",Georgia,serif; }
+    nav { height:80px; max-width:1180px; margin:auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; }
+    nav .links { display:flex; gap:32px; font-size:14px; }
+    nav .logo { font-size:30px; font-weight:600; }
+    .nav-actions { display:flex; align-items:center; gap:18px; font-size:14px; }
+    .pill { border:0; border-radius:999px; background:var(--ink); color:white; padding:12px 20px; }
+    .hero { max-width:1180px; min-height:620px; margin:auto; padding:64px 24px; display:grid; grid-template-columns:.92fr 1.08fr; align-items:center; gap:40px; }
+    .eyebrow { font-size:11px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); }
+    h1 { max-width:650px; margin:24px 0 28px; font-size:82px; line-height:.92; letter-spacing:-.045em; }
+    .lead { max-width:480px; color:#68665f; font-size:18px; line-height:1.7; }
+    .hero-actions { display:flex; gap:12px; margin-top:36px; }
+    .hero-actions .outline { border:1px solid #cbc7bd; background:transparent; border-radius:999px; padding:12px 20px; }
+    .cover-stage { height:510px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#ded8c9; position:relative; }
+    .cover-stage:before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.72),transparent 55%); }
+    .mock-cover { width:310px; height:390px; position:relative; z-index:1; transform:rotate(-4deg); background:#f2ede3; box-shadow:0 30px 70px rgba(62,55,43,.25); transition:transform .5s ease; }
+    .mock-cover:hover { transform:rotate(-2deg) scale(1.02); }
+    .mock-cover:before { content:""; position:absolute; left:50%; top:0; height:100%; width:1px; background:#b9b2a4; }
+    .cover-left { width:50%; padding:20px; }
+    .cover-left small { text-transform:uppercase; letter-spacing:.25em; }
+    .cover-title { margin-top:95px; font-size:42px; line-height:.9; }
+    .cover-photo { position:absolute; right:0; bottom:0; width:50%; height:100%; background:url("https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=700&q=85") center/cover; }
+    .features { border-block:1px solid var(--line); background:#f1eee6; }
+    .feature-grid { max-width:1180px; margin:auto; padding:0 24px; display:grid; grid-template-columns:repeat(3,1fr); }
+    .feature { min-height:260px; padding:48px 32px 32px; border-right:1px solid var(--line); }
+    .feature:last-child { border-right:0; }
+    .feature h2 { margin:40px 0 16px; font-size:32px; }
+    .feature p:last-child { color:#69675f; line-height:1.7; }
+    .templates { max-width:1180px; margin:auto; padding:96px 24px; }
+    .templates h2 { margin:12px 0 40px; font-size:48px; }
+    .template-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .template-card { height:360px; overflow:hidden; background:#ddd8cc; }
+    .template-card div { height:100%; background-size:cover; background-position:center; transition:transform .5s; }
+    .template-card:hover div { transform:scale(1.03); }
+    .template-name { margin-top:14px; font-size:14px; }
+    footer { border-top:1px solid var(--line); max-width:1180px; margin:auto; padding:32px 24px; display:flex; justify-content:space-between; }
+
+    .reader { display:none; position:fixed; z-index:50; inset:0; background:#171715; color:white; }
+    .reader.open { display:flex; flex-direction:column; }
+    .reader-bar { height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 24px; }
+    .reader-stage { flex:1; display:flex; align-items:center; justify-content:center; perspective:1600px; }
+    .reader-spread { width:min(780px,86vw); height:min(520px,62vh); display:flex; box-shadow:0 30px 80px rgba(0,0,0,.5); }
+    .reader-page { width:50%; height:100%; position:relative; transform-origin:left; background:#e9e5da; transition:transform .85s cubic-bezier(.645,.045,.355,1),box-shadow .85s; backface-visibility:hidden; }
+    .reader-page.turning { transform:rotateY(-178deg); box-shadow:-30px 10px 60px rgba(0,0,0,.35); }
+    .reader-page span { position:absolute; left:0; right:0; bottom:18%; text-align:center; color:#20201e; }
+    .reader-page .reader-title { font-size:48px; line-height:.9; }
+    .reader-controls { height:64px; display:flex; align-items:center; justify-content:center; gap:24px; }
+    .reader-controls button { border:0; background:transparent; color:white; font-size:18px; }
+
+    @media (max-width:760px) {
+      nav .links { display:none; }
+      .nav-actions a:first-child { display:none; }
+      .hero { grid-template-columns:1fr; min-height:auto; padding-top:32px; }
+      h1 { font-size:54px; }
+      .cover-stage { height:430px; }
+      .mock-cover { width:280px; height:350px; }
+      .feature-grid { grid-template-columns:1fr; }
+      .feature { border-right:0; border-bottom:1px solid var(--line); }
+      .template-grid { grid-template-columns:1fr; }
+      .reader-spread { width:min(390px,88vw); }
+      .reader-page { width:100%; }
+      .reader-page + .reader-page { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="logo serif" href="#">Foliora</a>
+    <div class="links"><a href="#features">Features</a><a href="#templates">Templates</a><button id="openReaderLink" style="border:0;background:none;padding:0">Reader</button></div>
+    <div class="nav-actions"><a href="#">Sign in</a><a class="pill" href="#templates">Start creating</a></div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">The independent magazine studio</div>
+        <h1 class="serif">Your stories deserve more than a scroll.</h1>
+        <p class="lead">Create stunning digital magazines, bring your ideas to life, and share them with the world.</p>
+        <div class="hero-actions">
+          <a class="pill" href="#templates">Start creating</a>
+          <button class="outline" id="openReader">Explore magazines</button>
+        </div>
+      </div>
+      <div class="cover-stage">
+        <div class="mock-cover">
+          <div class="cover-left">
+            <small class="serif">Volume 04</small>
+            <div class="cover-title serif">Notes<br>from<br>Elsewhere</div>
+          </div>
+          <div class="cover-photo"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="feature-grid">
+        <article class="feature"><small>01</small><h2 class="serif">Create with intention</h2><p>Editorial layouts, expressive type and precise tools—without the learning curve.</p></article>
+        <article class="feature"><small>02</small><h2 class="serif">Publish beautifully</h2><p>Share a permanent public reader with realistic page turns and a QR code.</p></article>
+        <article class="feature"><small>03</small><h2 class="serif">Make it yours</h2><p>Use flexible pages, original uploads and free open-source typography.</p></article>
+      </div>
+    </section>
+
+    <section class="templates" id="templates">
+      <div class="eyebrow">Start inspired</div>
+      <h2 class="serif">Magazine templates</h2>
+      <div class="template-grid">
+        <div><div class="template-card"><div style="background-image:url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=85')"></div></div><div class="template-name">Minimal Editorial</div></div>
+        <div><div class="template-card"><div style="background-image:url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=700&q=85')"></div></div><div class="template-name">Photography Portfolio</div></div>
+        <div><div class="template-card"><div style="background-image:url('https://images.unsplash.com/photo-1470214304380-aadaedcfff1b?auto=format&fit=crop&w=700&q=85')"></div></div><div class="template-name">Travel Journal</div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span class="serif" style="font-size:24px">Foliora</span><span style="color:var(--muted);font-size:14px">Stories deserve beautiful pages.</span></footer>
+
+  <div class="reader" id="reader" aria-modal="true" role="dialog">
+    <div class="reader-bar"><button id="closeReader" style="border:0;background:none;color:white">← Close</button><div class="serif">Terra &amp; Tide</div><span style="font-size12px">Terra Ellis</span></div>
+    <div class="reader-stage">
+      <div class="reader-spread" id="spread">
+        <div class="reader-page" id="leftPage"><span><div class="reader-title serif" id="leftTitle">TERRA</div></span></div>
+        <div class="reader-page" id="rightPage"><span><div class="reader-title serif" id="rightTitle">THE EDGE OF ELSEWHERE</div></span></div>
+      </div>
+    </div>
+    <div class="reader-controls"><button id="prev">←</button><span id="pageCount" style="font-size12px">1 / 3</span><button id="next">→</button></div>
+  </div>
+
+  <script>
+    const reader = document.getElementById("reader");
+    const leftPage = document.getElementById("leftPage");
+    const rightPage = document.getElementById("rightPage");
+    const pageCount = document.getElementById("pageCount");
+    const leftTitle = document.getElementById("leftTitle");
+    const rightTitle = document.getElementById("rightTitle");
+    const titles = ["TERRA","THE EDGE OF ELSEWHERE","SALT / SKY"];
+    let page = 0;
+
+    function openReader() { reader.classList.add("open"); document.body.style.overflow="hidden"; }
+    function closeReader() { reader.classList.remove("open"); document.body.style.overflow=""; }
+    function draw() {
+      pageCount.textContent = `${page + 1} / ${titles.length}`;
+      leftTitle.textContent = titles[page];
+      rightTitle.textContent = titles[Math.min(page + 1, titles.length - 1)];
+      leftPage.style.background = ["#d7d0c3","#eeeae1","#bec7bb"][page];
+      rightPage.style.background = ["#eeeae1","#bec7bb","#d7d0c3"][page];
+    }
+    function turn(direction) {
+      if ((direction > 0 && page >= titles.length - 1) || (direction < 0 && page <= 0)) return;
+      const turning = direction > 0 ? leftPage : rightPage;
+      turning.classList.add("turning");
+      setTimeout(() => { page += direction; draw(); turning.classList.remove("turning"); }, 420);
+    }
+    document.getElementById("openReader").addEventListener("click", openReader);
+    document.getElementById("openReaderLink").addEventListener("click", openReader);
+    document.getElementById("closeReader").addEventListener("click", closeReader);
+    document.getElementById("prev").addEventListener("click", () => turn(-1));
+    document.getElementById("next").addEventListener("click", () => turn(1));
+    document.addEventListener("keydown", event => {
+      if (!reader.classList.contains("open")) return;
+      if (event.key === "ArrowLeft") turn(-1);
+      if (event.key === "ArrowRight") turn(1);
+      if (event.key === "Escape") closeReader();
+    });
+  </script>
+</body>
+</html>

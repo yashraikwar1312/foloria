@@ -1,4 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Foliora is a digital magazine creation and publishing application.
+
+## Open the standalone HTML demo
+
+You can test the visual prototype without starting Next.js:
+
+```bash
+npm run serve:html
+```
+
+Open `http://localhost:4173/foliora-demo.html`.
+
+In GitHub Codespaces, run the command above and open the forwarded port **4173**.
 
 ## Getting Started
 
